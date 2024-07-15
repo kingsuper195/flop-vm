@@ -12,6 +12,10 @@ class sprite {
   mosaic = 0;
   brightness = 0;
   ghost = 0;
+  costumes = {
+    cat1:"https://cdn.assets.scratch.mit.edu/internalapi/asset/b7853f557e4426412e64bb3da6531a99.svg/get/"
+  };
+  currentCostume = this.costumes.cat1
   motion = {};
   constructor() {
     this.motion.moveSteps = moveSteps.bind(this);
