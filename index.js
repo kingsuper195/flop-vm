@@ -59,14 +59,12 @@ function moveSteps(steps) {
   const dy = steps * Math.round(Math.cos((Math.PI * dir) / 180) * 1e10) / 1e10;
   this.x += dx;
   this.y += dy;
-  console.log(this);
-  // if(this.renderer)
-  //   renderer.updateDrawableProperties(drawableID2, s.getRendererProps());
 }
+
 function gotoXY(xPos, yPos) {
   this.x = xPos;
   this.y = yPos;
-  console.log(this);
+  
 }
 function goTo(target) {
   if(target == "random") {
@@ -76,19 +74,19 @@ function goTo(target) {
     this.x = target.x;
     this.y = target.y
   }
-  console.log(this);
+  
 }
 function turnRight(deg) {
   this.dir += deg;
-  console.log(this);
+  
 }
 function turnLeft(deg) {
   this.dir -= deg;
-  console.log(this);
+  
 }
 function pointInDirection(dir) {
   this.dir = dir
-  console.log(this);
+  
 }
 function pointTowards (target) {
   let targetX = 0;
@@ -102,7 +100,7 @@ function pointTowards (target) {
     const dy = targetY - this.y;
     const direction = 90 - Math.atan2(dy, dx)* 180 / Math.PI;
     this.dir = direction
-    console.log(this);
+    
   }
 }
 function glide(x, y, secs) {
@@ -111,7 +109,7 @@ function glide(x, y, secs) {
   for(let i = 0; i < secs*fps; i++) {
     this.x += speedx;
     this.y += speedy;
-    console.log(this);
+    
   }
 }
 
