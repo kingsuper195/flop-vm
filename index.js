@@ -1,4 +1,4 @@
-const fps = 30;
+
 class sprite {
   renderLoop = null;
   x = 0;
@@ -14,7 +14,9 @@ class sprite {
   brightness = 0;
   ghost = 0;
   costumes = {
-    cat1:"https://cdn.assets.scratch.mit.edu/internalapi/asset/b7853f557e4426412e64bb3da6531a99.svg/get/"
+    cat1:{"data":"https://cdn.assets.scratch.mit.edu/internalapi/asset/b7853f557e4426412e64bb3da6531a99.svg/get/",
+      "type":"vector"
+    }
   };
   currentCostume = this.costumes.cat1
   motion = {};
@@ -138,11 +140,16 @@ function glide(x, y, secs) {
   if(!this.renderLoop) {
     throw new Error('Sprite must be added to a RenderLoop before gliding');
   }
-  const speedx = (x - this.x)/(secs*fps);
-  const speedy = (y - this.y)/(secs*fps);
+  if(secs == 0) {
+    // if secs == 0, then move immediately
+    return this.gotoXY(this.x + x, this.y + y);
+  }
+  const max = secs*this.renderLoop.fps;
+  const speedx = (x - this.x)/max;
+  const speedy = (y - this.y)/max;
   this.glideProps = {
     i: 0,
-    max: secs*fps,
+    max,
     speedx,
     speedy
   };
