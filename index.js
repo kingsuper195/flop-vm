@@ -1,5 +1,6 @@
 const fps = 30;
 class sprite {
+  renderLoop = null;
   x = 0;
   y = 0;
   dir = 90;
@@ -37,6 +38,12 @@ class sprite {
     this.motion.getDir = getDir.bind(this);
   }
 
+  destructor() {
+    if(this.renderLoop) {
+      this.renderLoop.removeCallback(this.glideStep.bind(this));
+    }
+  }
+
   getRendererProps() {
     return {
       position: [this.x, this.y],
@@ -51,6 +58,28 @@ class sprite {
       ghost: this.ghost,
     };
   }
+
+  setRenderLoop(renderLoop) {
+    if(this.renderLoop) {
+      // this.renderLoop.removeCallback(this.glideStep.bind(this));
+    }
+    this.renderLoop = renderLoop;
+    if(this.renderLoop) {
+      this.renderLoop.addCallback(this.glideStep.bind(this));
+    }
+  }
+
+  glideStep() {
+    if(!this.glideProps) return;
+    if(this.glideProps.i >= this.glideProps.max) {
+      this.glideProps = null;
+      return;
+    }
+    this.glideProps.i++;
+    this.x += this.glideProps.speedx;
+    this.y += this.glideProps.speedy;
+  }
+  
 }
 
 function moveSteps(steps) {
@@ -103,21 +132,28 @@ function pointTowards (target) {
     
   }
 }
+
+
 function glide(x, y, secs) {
+  if(!this.renderLoop) {
+    throw new Error('Sprite must be added to a RenderLoop before gliding');
+  }
   const speedx = (x - this.x)/(secs*fps);
   const speedy = (y - this.y)/(secs*fps);
-  for(let i = 0; i < secs*fps; i++) {
-    this.x += speedx;
-    this.y += speedy;
-    
-  }
+  this.glideProps = {
+    i: 0,
+    max: secs*fps,
+    speedx,
+    speedy
+  };
+  this.glideStep();
 }
 
 function glideTo(target, secs) {
   if(target == "random") {
     x = Math.floor(Math.random() * 481) - 240;
     y = Math.floor(Math.random() * 361) - 180;
-    glide(x, y, 1)
+    glide(x, y, secs)
   }else {
     glide(target.x, target.y, secs)
   }
