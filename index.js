@@ -6,6 +6,7 @@ class sprite {
   dir = 90;
   rotationStyle = 'all-around'; // 'left-right' || 'dont-rotate'
   size = 100;
+  shown = true;
   colour = 0;
   fisheye = 0;
   whirl = 0;
@@ -14,12 +15,15 @@ class sprite {
   brightness = 0;
   ghost = 0;
   costumes = {
-    cat1:{"data":"https://cdn.assets.scratch.mit.edu/internalapi/asset/b7853f557e4426412e64bb3da6531a99.svg/get/",
-      "type":"vector"
+    cat1:{
+      "data":"https://cdn.assets.scratch.mit.edu/internalapi/asset/b7853f557e4426412e64bb3da6531a99.svg/get/",
+      "type":"vector",
+      "id":1
     }
   };
   currentCostume = this.costumes.cat1
   motion = {};
+  looks = {};
   constructor() {
     this.motion.moveSteps = moveSteps.bind(this);
     this.motion.gotoXY = gotoXY.bind(this);
@@ -38,6 +42,7 @@ class sprite {
     this.motion.getX = getX.bind(this);
     this.motion.getY = getY.bind(this);
     this.motion.getDir = getDir.bind(this);
+    this.looks.setCostume = setCostume.bind(this);
   }
 
   destructor() {
@@ -58,6 +63,7 @@ class sprite {
       mosaic: this.mosaic,
       brightness: this.brightness,
       ghost: this.ghost,
+      visible: this.shown,
     };
   }
 
@@ -74,6 +80,7 @@ class sprite {
   glideStep() {
     if(!this.glideProps) return;
     if(this.glideProps.i >= this.glideProps.max) {
+      this.glideProps.resolve();
       this.glideProps = null;
       return;
     }
@@ -90,13 +97,15 @@ function moveSteps(steps) {
   const dy = steps * Math.round(Math.cos((Math.PI * dir) / 180) * 1e10) / 1e10;
   this.x += dx;
   this.y += dy;
+  return Promise.resolve();
 }
 
 function gotoXY(xPos, yPos) {
   this.x = xPos;
   this.y = yPos;
-  
+  return Promise.resolve();
 }
+
 function goTo(target) {
   if(target == "random") {
     this.x = Math.floor(Math.random() * 481) - 240;
@@ -105,21 +114,25 @@ function goTo(target) {
     this.x = target.x;
     this.y = target.y
   }
-  
+  return Promise.resolve();  
 }
+
 function turnRight(deg) {
   this.dir += deg;
-  
+  return Promise.resolve();
 }
+
 function turnLeft(deg) {
   this.dir -= deg;
-  
+  return Promise.resolve();  
 }
+
 function pointInDirection(dir) {
   this.dir = dir
-  
+  return Promise.resolve();
 }
-function pointTowards (target) {
+
+function pointTowards(target) {
   let targetX = 0;
   let targetY = 0;
   if (target == "random") {
@@ -131,63 +144,85 @@ function pointTowards (target) {
     const dy = targetY - this.y;
     const direction = 90 - Math.atan2(dy, dx)* 180 / Math.PI;
     this.dir = direction
-    
   }
+  return Promise.resolve();
 }
 
 
-function glide(x, y, secs) {
+async function glide(x, y, secs) {
   if(!this.renderLoop) {
     throw new Error('Sprite must be added to a RenderLoop before gliding');
   }
+
   if(secs == 0) {
     // if secs == 0, then move immediately
-    return this.gotoXY(this.x + x, this.y + y);
+    return this.gotoXY(x, y);
   }
-  const max = secs*this.renderLoop.fps;
-  const speedx = (x - this.x)/max;
-  const speedy = (y - this.y)/max;
-  this.glideProps = {
-    i: 0,
-    max,
-    speedx,
-    speedy
-  };
-  this.glideStep();
+
+  return new Promise((resolve) => {
+    const max = secs*this.renderLoop.fps;
+    const speedx = (x - this.x)/max;
+    const speedy = (y - this.y)/max;
+    this.glideProps = {
+      i: 0,
+      max,
+      speedx,
+      speedy,
+      resolve
+    };
+    this.glideStep();  
+  });
 }
 
 function glideTo(target, secs) {
   if(target == "random") {
     x = Math.floor(Math.random() * 481) - 240;
     y = Math.floor(Math.random() * 361) - 180;
-    glide(x, y, secs)
+    return glide(x, y, secs)
   }else {
-    glide(target.x, target.y, secs)
+    return glide(target.x, target.y, secs)
   }
 }
 
 function setRotationStyle(style) {
   this.rotationStyle = style;
+  return Promise.resolve();
 }
  
 function changeX(x) {
   this.x += x;
+  return Promise.resolve();
 }
+
 function setX(x) {
   this.x = x;
+  return Promise.resolve();
 }
+
 function changeY(y) {
   this.y += y;
+  return Promise.resolve();
 }
+
 function setY(y) {
   this.y = y;
+  return Promise.resolve();
 }
+
 function getX() {
   return this.x
 }
+
 function getY() {
   return this.y
 }
+
 function getDir() {
   return this.dir
+}
+
+async function setCostume(costume) {
+  this.currentCostume = costume;
+  await this.renderLoop.updateSkin(this);
+  return Promise.resolve();
 }
