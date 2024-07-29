@@ -15,15 +15,17 @@ class sprite {
   brightness = 0;
   ghost = 0;
   costumes = {
-    cat1:{
-      "data":"https://cdn.assets.scratch.mit.edu/internalapi/asset/b7853f557e4426412e64bb3da6531a99.svg/get/",
-      "type":"vector",
-      "id":1
+    cat1: {
+      "data": "https://cdn.assets.scratch.mit.edu/internalapi/asset/b7853f557e4426412e64bb3da6531a99.svg/get/",
+      "type": "vector",
+      "id": 1
     }
   };
   currentCostume = this.costumes.cat1
   motion = {};
   looks = {};
+  resolvers = [];
+
   constructor() {
     this.motion.moveSteps = moveSteps.bind(this);
     this.motion.gotoXY = gotoXY.bind(this);
@@ -46,8 +48,8 @@ class sprite {
   }
 
   destructor() {
-    if(this.renderLoop) {
-      this.renderLoop.removeCallback(this.glideStep.bind(this));
+    if (this.renderLoop) {
+      this.renderLoop.removeCallback(this.renderStep.bind(this));
     }
   }
 
@@ -68,71 +70,81 @@ class sprite {
   }
 
   setRenderLoop(renderLoop) {
-    if(this.renderLoop) {
+    if (this.renderLoop) {
       // this.renderLoop.removeCallback(this.glideStep.bind(this));
     }
     this.renderLoop = renderLoop;
-    if(this.renderLoop) {
-      this.renderLoop.addCallback(this.glideStep.bind(this));
+    if (this.renderLoop) {
+      this.renderLoop.addCallback(this.renderStep.bind(this));
     }
   }
 
-  glideStep() {
-    if(!this.glideProps) return;
-    if(this.glideProps.i >= this.glideProps.max) {
-      this.glideProps.resolve();
-      this.glideProps = null;
-      return;
+  renderStep() {
+    const resolvers = [...this.resolvers];
+    this.resolvers = [];
+    resolvers.forEach(resolve => resolve());
+
+    if (this.glideProps) {
+      if (this.glideProps.i >= this.glideProps.max) {
+        this.glideProps.resolve();
+        this.glideProps = null;
+        return;
+      }
+      this.glideProps.i++;
+      this.x += this.glideProps.speedx;
+      this.y += this.glideProps.speedy;
     }
-    this.glideProps.i++;
-    this.x += this.glideProps.speedx;
-    this.y += this.glideProps.speedy;
   }
   
+  async waitForRenderLoop() {
+    return new Promise(resolve => {
+      this.resolvers.push(resolve);
+    });
+  }
 }
 
-function moveSteps(steps) {
+async function moveSteps(steps) {
   const dir = this.dir;
   const dx = steps * Math.round(Math.sin((Math.PI * dir) / 180) * 1e10) / 1e10;
   const dy = steps * Math.round(Math.cos((Math.PI * dir) / 180) * 1e10) / 1e10;
   this.x += dx;
   this.y += dy;
-  return Promise.resolve();
+  return this.waitForRenderLoop();
 }
 
-function gotoXY(xPos, yPos) {
+async function gotoXY(xPos, yPos) {
   this.x = xPos;
   this.y = yPos;
-  return Promise.resolve();
+  return this.waitForRenderLoop();
 }
 
-function goTo(target) {
-  if(target == "random") {
+async function goTo(target) {
+  if (target == "random") {
     this.x = Math.floor(Math.random() * 481) - 240;
     this.y = Math.floor(Math.random() * 361) - 180;
-  }else {
+  } else {
     this.x = target.x;
     this.y = target.y
   }
-  return Promise.resolve();  
+  return this.waitForRenderLoop();
 }
 
-function turnRight(deg) {
+async function turnRight(deg) {
   this.dir += deg;
-  return Promise.resolve();
+  return this.waitForRenderLoop();
 }
 
-function turnLeft(deg) {
+async function turnLeft(deg) {
   this.dir -= deg;
-  return Promise.resolve();  
+  return this.waitForRenderLoop();
 }
 
-function pointInDirection(dir) {
+async function pointInDirection(dir) {
   this.dir = dir
-  return Promise.resolve();
+  return this.waitForRenderLoop();
 }
 
-function pointTowards(target) {
+async function pointTowards(target) {
   let targetX = 0;
   let targetY = 0;
   if (target == "random") {
@@ -142,27 +154,27 @@ function pointTowards(target) {
     targetY = target.y;
     const dx = targetX - this.x;
     const dy = targetY - this.y;
-    const direction = 90 - Math.atan2(dy, dx)* 180 / Math.PI;
+    const direction = 90 - Math.atan2(dy, dx) * 180 / Math.PI;
     this.dir = direction
   }
-  return Promise.resolve();
+  return this.waitForRenderLoop();
 }
 
 
 async function glide(x, y, secs) {
-  if(!this.renderLoop) {
+  if (!this.renderLoop) {
     throw new Error('Sprite must be added to a RenderLoop before gliding');
   }
 
-  if(secs == 0) {
+  if (secs == 0) {
     // if secs == 0, then move immediately
     return this.gotoXY(x, y);
   }
 
   return new Promise((resolve) => {
-    const max = secs*this.renderLoop.fps;
-    const speedx = (x - this.x)/max;
-    const speedy = (y - this.y)/max;
+    const max = secs * this.renderLoop.fps;
+    const speedx = (x - this.x) / max;
+    const speedy = (y - this.y) / max;
     this.glideProps = {
       i: 0,
       max,
@@ -170,43 +182,43 @@ async function glide(x, y, secs) {
       speedy,
       resolve
     };
-    this.glideStep();  
+    this.glideStep();
   });
 }
 
-function glideTo(target, secs) {
-  if(target == "random") {
+async function glideTo(target, secs) {
+  if (target == "random") {
     x = Math.floor(Math.random() * 481) - 240;
     y = Math.floor(Math.random() * 361) - 180;
     return glide(x, y, secs)
-  }else {
+  } else {
     return glide(target.x, target.y, secs)
   }
 }
 
-function setRotationStyle(style) {
+async function setRotationStyle(style) {
   this.rotationStyle = style;
-  return Promise.resolve();
+  return this.waitForRenderLoop();
 }
- 
-function changeX(x) {
+
+async function changeX(x) {
   this.x += x;
-  return Promise.resolve();
+  return this.waitForRenderLoop();
 }
 
-function setX(x) {
+async function setX(x) {
   this.x = x;
-  return Promise.resolve();
+  return this.waitForRenderLoop();
 }
 
-function changeY(y) {
+async function changeY(y) {
   this.y += y;
-  return Promise.resolve();
+  return this.waitForRenderLoop();
 }
 
-function setY(y) {
+async function setY(y) {
   this.y = y;
-  return Promise.resolve();
+  return this.waitForRenderLoop();
 }
 
 function getX() {
@@ -224,5 +236,5 @@ function getDir() {
 async function setCostume(costume) {
   this.currentCostume = costume;
   await this.renderLoop.updateSkin(this);
-  return Promise.resolve();
+  return this.waitForRenderLoop();
 }
