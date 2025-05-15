@@ -14,14 +14,15 @@ class sprite {
   mosaic = 0;
   brightness = 0;
   ghost = 0;
-  costumes = {
-    cat1: {
+  costumes = [
+    {
+      "name":"cat1", 
       "data": "https://cdn.assets.scratch.mit.edu/internalapi/asset/b7853f557e4426412e64bb3da6531a99.svg/get/",
-      "type": "vector",
-      "id": 1
+      "type": "vector"
     }
-  };
-  currentCostume = this.costumes.cat1
+  ];
+  currentIndex = 0
+  currentCostume = this.costumes[this.currentIndex]
   motion = {};
   looks = {};
   resolvers = [];
@@ -45,6 +46,7 @@ class sprite {
     this.motion.getY = getY.bind(this);
     this.motion.getDir = getDir.bind(this);
     this.looks.setCostume = setCostume.bind(this);
+    this.looks.nextCostume = nextCostume.bind(this);
   }
 
   destructor() {
@@ -233,8 +235,21 @@ function getDir() {
   return this.dir
 }
 
+/**
+ * 
+ * @param {number} costume 
+ * @returns Promise<any>
+ */
 async function setCostume(costume) {
-  this.currentCostume = costume;
+  this.currentIndex = costume;
+  this.currentCostume = this.costumes[this.currentIndex];
+  await this.renderLoop.updateSkin(this);
+  return this.waitForRenderLoop();
+}
+
+async function nextCostume() {
+  this.currentIndex = (this.currentIndex+1)%this.costumes.length
+  this.currentCostume = this.costumes[this.currentIndex];
   await this.renderLoop.updateSkin(this);
   return this.waitForRenderLoop();
 }
