@@ -1,5 +1,5 @@
 
-class sprite {
+class Sprite {
   renderLoop = null;
   x = 0;
   y = 0;
@@ -126,7 +126,7 @@ async function goTo(target) {
     this.y = Math.floor(Math.random() * 361) - 180;
   } else {
     this.x = target.x;
-    this.y = target.y
+    this.y = target.y;
   }
   return this.waitForRenderLoop();
 }
@@ -142,7 +142,7 @@ async function turnLeft(deg) {
 }
 
 async function pointInDirection(dir) {
-  this.dir = dir
+  this.dir = dir;
   return this.waitForRenderLoop();
 }
 
@@ -157,7 +157,7 @@ async function pointTowards(target) {
     const dx = targetX - this.x;
     const dy = targetY - this.y;
     const direction = 90 - Math.atan2(dy, dx) * 180 / Math.PI;
-    this.dir = direction
+    this.dir = direction;
   }
   return this.waitForRenderLoop();
 }
@@ -192,9 +192,9 @@ async function glideTo(target, secs) {
   if (target == "random") {
     x = Math.floor(Math.random() * 481) - 240;
     y = Math.floor(Math.random() * 361) - 180;
-    return glide(x, y, secs)
+    return glide(x, y, secs);
   } else {
-    return glide(target.x, target.y, secs)
+    return glide(target.x, target.y, secs);
   }
 }
 
@@ -224,15 +224,15 @@ async function setY(y) {
 }
 
 function getX() {
-  return this.x
+  return this.x;
 }
 
 function getY() {
-  return this.y
+  return this.y;
 }
 
 function getDir() {
-  return this.dir
+  return this.dir;
 }
 
 /**
@@ -248,7 +248,7 @@ async function setCostume(costume) {
 }
 
 async function nextCostume() {
-  this.currentIndex = (this.currentIndex+1)%this.costumes.length
+  this.currentIndex = (this.currentIndex+1)%this.costumes.lengthh;
   this.currentCostume = this.costumes[this.currentIndex];
   await this.renderLoop.updateSkin(this);
   return this.waitForRenderLoop();
