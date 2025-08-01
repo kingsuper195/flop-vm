@@ -2,10 +2,12 @@
 class Flop {
   renderLoop = null;
   looks = {};
+  sound = {};
   resolvers = [];
 
   constructor() {
     this.looks.setBackdrop = setBackdrop.bind(this);
+    this.sound.playSound = playSound.bind(this  );
   }
 
   destructor() {
@@ -14,7 +16,7 @@ class Flop {
     }
   }
 
- 
+
 
   setRenderLoop(renderLoop) {
     if (this.renderLoop) {
@@ -42,7 +44,7 @@ class Flop {
       this.y += this.glideProps.speedy;
     }
   }
-  
+
   async waitForRenderLoop() {
     return new Promise(resolve => {
       this.resolvers.push(resolve);
@@ -51,6 +53,10 @@ class Flop {
 }
 
 async function setBackdrop(img, type) {
-    await this.renderLoop.setStage(img, type);
-    await this.waitForRenderLoop();
+  await this.renderLoop.setStage(img, type);
+  await this.waitForRenderLoop();
+}
+
+async function playSound(pan, pitch, volume, soundFile) {
+  await this.renderLoop.playSound(pan, pitch, volume, soundFile);
 }

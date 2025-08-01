@@ -16,7 +16,7 @@ class Sprite {
   ghost = 0;
   costumes = [
     {
-      "name":"cat1", 
+      "name": "cat1",
       "data": "https://cdn.assets.scratch.mit.edu/internalapi/asset/b7853f557e4426412e64bb3da6531a99.svg/get/",
       "type": "vector"
     }
@@ -47,6 +47,15 @@ class Sprite {
     this.motion.getDir = getDir.bind(this);
     this.looks.setCostume = setCostume.bind(this);
     this.looks.nextCostume = nextCostume.bind(this);
+    this.looks.setSize = setSize.bind(this);
+    this.looks.changeSize = changeSize.bind(this);
+    this.looks.setEffect = setEffect.bind(this);
+    this.looks.changeEffect = changeEffect.bind(this);
+    this.looks.clearEffects = clearEffects.bind(this);
+    this.looks.show=show.bind(this);
+    this.looks.hide=hide.bind(this);
+    this.looks.size=size.bind(this);
+    this.looks.costumeNumber=costumeNumber.bind(this);
   }
 
   destructor() {
@@ -97,7 +106,7 @@ class Sprite {
       this.y += this.glideProps.speedy;
     }
   }
-  
+
   async waitForRenderLoop() {
     return new Promise(resolve => {
       this.resolvers.push(resolve);
@@ -248,8 +257,100 @@ async function setCostume(costume) {
 }
 
 async function nextCostume() {
-  this.currentIndex = (this.currentIndex+1)%this.costumes.lengthh;
+  this.currentIndex = (this.currentIndex + 1) % this.costumes.lengthh;
   this.currentCostume = this.costumes[this.currentIndex];
   await this.renderLoop.updateSkin(this);
   return this.waitForRenderLoop();
+}
+async function setSize(inSize) {
+  this.size = inSize;
+  return this.waitForRenderLoop();
+}
+async function changeSize(inSize) {
+  this.size += inSize;
+  return this.waitForRenderLoop();
+}
+
+async function setEffect(effect, n) {
+  switch (effect) {
+    case 'colour':
+      this.colour = n;
+      break;
+    case 'fisheye':
+      this.fisheye = n;
+      break;
+    case 'pixalate':
+      this.pixalate = n;
+      break;
+    case 'whirl':
+      this.whirl = n;
+      break;
+    case 'mosaic':
+      this.mosaic = n;
+      break;
+    case 'brightness':
+      this.brightness = n;
+      break;
+    case 'ghost':
+      this.ghost = n;
+      break;
+    default:
+      console.error('invalid effect');
+      break;
+  }
+}
+
+async function changeEffect(effect, n) {
+  switch (effect) {
+    case 'colour':
+      this.colour += n;
+      break;
+    case 'fisheye':
+      this.fisheye += n;
+      break;
+    case 'pixalate':
+      this.pixalate += n;
+      break;
+    case 'whirl':
+      this.whirl += n;
+      break;
+    case 'mosaic':
+      this.mosaic += n;
+      break;
+    case 'brightness':
+      this.brightness += n;
+      break;
+    case 'ghost':
+      this.ghost += n;
+      break;
+    default:
+      console.error('invalid effect');
+      break;
+  }
+}
+
+async function clearEffects() {
+  this.colour = 0;
+  this.fisheye = 0;
+  this.pixalate = 0;
+  this.whirl = 0;
+  this.mosaic = 0;
+  this.brightness = 0;
+  this.ghost = 0;
+}
+
+async function hide() {
+  this.shown=false;
+}
+
+async function show() {
+  this.shown=true;
+}
+
+async function costumeNumber() {
+  return this.currentIndex;
+}
+
+async function size() {
+  return this.size;
 }
