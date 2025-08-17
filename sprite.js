@@ -21,8 +21,8 @@ class Sprite {
       "type": "vector"
     }
   ];
-  currentIndex = 0
-  currentCostume = this.costumes[this.currentIndex]
+  currentIndex = 0;
+  currentCostume = this.costumes[this.currentIndex];
   motion = {};
   looks = {};
   resolvers = [];
@@ -52,10 +52,10 @@ class Sprite {
     this.looks.setEffect = setEffect.bind(this);
     this.looks.changeEffect = changeEffect.bind(this);
     this.looks.clearEffects = clearEffects.bind(this);
-    this.looks.show=show.bind(this);
-    this.looks.hide=hide.bind(this);
-    this.looks.size=size.bind(this);
-    this.looks.costumeNumber=costumeNumber.bind(this);
+    this.looks.show = show.bind(this);
+    this.looks.hide = hide.bind(this);
+    this.looks.size = size.bind(this);
+    this.looks.costumeNumber = costumeNumber.bind(this);
   }
 
   destructor() {
@@ -340,11 +340,11 @@ async function clearEffects() {
 }
 
 async function hide() {
-  this.shown=false;
+  this.shown = false;
 }
 
 async function show() {
-  this.shown=true;
+  this.shown = true;
 }
 
 async function costumeNumber() {

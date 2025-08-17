@@ -1,7 +1,7 @@
 {
   "name": "flop-vm",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "sprite.js",
   "scripts": {},
   "author": "kingsuper195",
   "license": "MIT",

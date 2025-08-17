@@ -3,11 +3,13 @@ class Flop {
   renderLoop = null;
   looks = {};
   sound = {};
+  control = {};
   resolvers = [];
 
   constructor() {
     this.looks.setBackdrop = setBackdrop.bind(this);
-    this.sound.playSound = playSound.bind(this  );
+    this.sound.playSound = playSound.bind(this);
+    this.control.waitSeconds = waitSeconds.bind(this);
   }
 
   destructor() {
@@ -59,4 +61,8 @@ async function setBackdrop(img, type) {
 
 async function playSound(pan, pitch, volume, soundFile) {
   await this.renderLoop.playSound(pan, pitch, volume, soundFile);
+}
+
+function waitSeconds(s) {
+  return new Promise(resolve => setTimeout(resolve, s * 1000));
 }
