@@ -58,6 +58,9 @@ class Sprite {
     this.looks.size = size.bind(this);
     this.looks.costumeNumber = costumeNumber.bind(this);
     this.sensing.touching = touching.bind(this);
+    this.sensing.touchingColour = touchingColour.bind(this);
+    this.sensing.colourTouchingColour = colourTouchingColour.bind(this);
+    this.sensing.distanceTo = distanceTo.bind(this);
   }
 
   destructor() {
@@ -360,4 +363,26 @@ async function touching(object) {
   } else {
     return await this.renderLoop.renderer.isTouchingDrawables(this.render, [object.render]);
   }
+}
+
+async function touchingColour(colourRGB) {
+  return await this.renderLoop.renderer.isTouchingColor(this.render, colourRGB);
+}
+
+async function colourTouchingColour(colourRgb1, colourRgb2) {
+  return await (this.renderLoop.renderer.isTouchingColor(this.render, colourRgb1, colourRgb2) || this.renderLoop.renderer.isTouchingColor(this.render, colourRgb2, colourRgb1));
+}
+
+async function distanceTo(object) {
+  let tx, ty = 0;
+  if (object === "mouse") {
+    tx = this.renderLoop.mouse.x;
+    ty = this.renderLoop.mouse.y;
+  } else {
+    tx = object.x;
+    ty = object.y;
+  }
+  const dx = this.x - tx;
+  const dy = this.y - ty;
+  return Math.sqrt((dx * dx) + (dy * dy));
 }

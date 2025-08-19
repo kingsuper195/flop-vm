@@ -4,12 +4,17 @@ class Flop {
   looks = {};
   sound = {};
   control = {};
+  sensing = {};
   resolvers = [];
 
   constructor() {
     this.looks.setBackdrop = setBackdrop.bind(this);
     this.sound.playSound = playSound.bind(this);
     this.control.waitSeconds = waitSeconds.bind(this);
+    this.sensing.keyPressed = keyPressed.bind(this);
+    this.sensing.mouseDown = mouseDown.bind(this);
+    this.sensing.mouseX = mouseX.bind(this);
+    this.sensing.mouseY = mouseY.bind(this);
   }
 
   destructor() {
@@ -65,4 +70,19 @@ async function playSound(pan, pitch, volume, soundFile) {
 
 function waitSeconds(s) {
   return new Promise(resolve => setTimeout(resolve, s * 1000));
+}
+async function keyPressed(key) {
+  return (renderLoop.key == key);
+}
+
+async function mouseDown() {
+  return this.renderLoop.mouse.click;
+}
+
+async function mouseX() {
+  return this.renderLoop.mouse.x;
+}
+
+async function mouseY() {
+  return this.renderLoop.mouse.y;
 }
