@@ -25,6 +25,7 @@ class Sprite {
   currentCostume = this.costumes[this.currentIndex];
   motion = {};
   looks = {};
+  sensing = {};
   resolvers = [];
 
   constructor() {
@@ -56,6 +57,7 @@ class Sprite {
     this.looks.hide = hide.bind(this);
     this.looks.size = size.bind(this);
     this.looks.costumeNumber = costumeNumber.bind(this);
+    this.sensing.touching = touching.bind(this);
   }
 
   destructor() {
@@ -81,9 +83,6 @@ class Sprite {
   }
 
   setRenderLoop(renderLoop) {
-    if (this.renderLoop) {
-      // this.renderLoop.removeCallback(this.glideStep.bind(this));
-    }
     this.renderLoop = renderLoop;
     if (this.renderLoop) {
       this.renderLoop.addCallback(this.renderStep.bind(this));
@@ -353,4 +352,12 @@ async function costumeNumber() {
 
 async function size() {
   return this.size;
+}
+
+async function touching(object) {
+  if (object === "mouse") {
+    return await this.renderLoop.renderer.drawableTouching(this.render, this.renderLoop.mouse.trueX, this.renderLoop.mouse.trueY);
+  } else {
+    return await this.renderLoop.renderer.isTouchingDrawables(this.render, [object.render]);
+  }
 }
