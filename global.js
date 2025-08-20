@@ -5,6 +5,7 @@ class Flop {
   sound = {};
   control = {};
   sensing = {};
+  operaters = {};
   resolvers = [];
 
   constructor() {
@@ -15,6 +16,7 @@ class Flop {
     this.sensing.mouseDown = mouseDown.bind(this);
     this.sensing.mouseX = mouseX.bind(this);
     this.sensing.mouseY = mouseY.bind(this);
+    this.operaters.pickRandom = pickRandom.bind(this);
   }
 
   destructor() {
@@ -85,4 +87,8 @@ async function mouseX() {
 
 async function mouseY() {
   return this.renderLoop.mouse.y;
+}
+
+async function pickRandom(min, max) {
+  return Math.floor(Math.random() * max - min) + min + 1;
 }
