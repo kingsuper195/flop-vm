@@ -127,7 +127,7 @@ class Sprite {
 /**
  * @name moveSteps()
  * @description Move in the current direction by n steps.
- * @param {number} steps 
+ * @param {number} steps steps to move
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite1.motion.moveSteps(10);
@@ -145,8 +145,8 @@ async function moveSteps(steps) {
 /**
  * @name gotoXY()
  * @description Go to the given X and Y position.
- * @param {number} xPos 
- * @param {number} yPos 
+ * @param {number} xPos x position
+ * @param {number} yPos y position
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite.motion.goToXY(101,212);
@@ -160,7 +160,7 @@ async function gotoXY(xPos, yPos) {
 /**
  * @name goTo()
  * @description Go to object. "random" or a sprite.
- * @param {string | Sprite} target 
+ * @param {string | Sprite} target "random" or Sprite
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite.motion.goTo("random");  
@@ -179,7 +179,7 @@ async function goTo(target) {
 /**
  * @name turnRight()
  * @description Turn right by n degrees.
- * @param {number} deg 
+ * @param {number} deg degrees to turn by
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite.motion.turnRight(10);
@@ -192,7 +192,7 @@ async function turnRight(deg) {
 /**
  * @name turnLeft()
  * @description Turn left by n degrees.
- * @param {number} deg 
+ * @param {number} deg degrees to turn by
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite.motion.turnLeft(10);
@@ -205,7 +205,7 @@ async function turnLeft(deg) {
 /**
  * @name pointInDirection()
  * @description Point to a direction.
- * @param {number} dir 
+ * @param {number} dir direction to turn to
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite.motion.pointInDirection(100);
@@ -217,8 +217,8 @@ async function pointInDirection(dir) {
 }
 /**
  * @name pointTowards()
- * @description Point towards an object. "random" or Sprite.
- * @param {string | Sprite} target 
+ * @description Point towards an object.
+ * @param {string | Sprite} target "random" or Sprite
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite.motion.pointTowards("random");
@@ -243,9 +243,9 @@ async function pointTowards(target) {
 /**
  * @name glide()
  * @description Move to a position over n seconds.
- * @param {number} x 
- * @param {number} y 
- * @param {number} secs 
+ * @param {number} x x position
+ * @param {number} y y position
+ * @param {number} secs seconds
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example 
  * await sprite.motion.glide(200,100,3);
@@ -278,7 +278,7 @@ async function glide(x, y, secs) {
 /**
  * @name glideTo()
  * @description Move to a target over n seconds. Accepts "random" or sprite.
- * @param {string | Sprite} target 
+ * @param {string | Sprite} target "random" or Sprite
  * @param {number} secs 
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
@@ -296,8 +296,8 @@ async function glideTo(target, secs) {
 }
 /**
  * @name setRotationStyle()
- * @description Set the rotation style. "all-around", "left-right" or "dont-rotate"
- * @param {string} style 
+ * @description Set the rotation style. 
+ * @param {string} style "all-around", "left-right" or "dont-rotate"
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite.motion.setRotationStyle("left-right");
@@ -311,7 +311,7 @@ async function setRotationStyle(style) {
 /**
  * @name changeX()
  * @description Change x position by n.
- * @param {number} x 
+ * @param {number} x value to change by
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example 
  * await sprite.motion.changeX(5);
@@ -324,7 +324,7 @@ async function changeX(x) {
 /**
  * @name setX()
  * @description Set x position to n.
- * @param {number} x 
+ * @param {number} x x position
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example 
  * await sprite.motion.setX(100);
@@ -337,7 +337,7 @@ async function setX(x) {
 /**
  * @name changeY()
  * @description Change y position by n.
- * @param {number} y 
+ * @param {number} y value to change by
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite.motion.changeY(5);
@@ -350,7 +350,7 @@ async function changeY(y) {
 /**
  * @name setY()
  * @description Set y postition to n.
- * @param {number} y 
+ * @param {number} y y position
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example 
  * await sprite.motion.setY(100);
@@ -364,6 +364,8 @@ async function setY(y) {
  * @name getX()
  * @description Get the X position.
  * @returns X position.
+ * @example
+ * console.log(sprite.motion.getX());
  * @memberof motion
  */
 function getX() {
@@ -373,6 +375,8 @@ function getX() {
  * @name getY()
  * @description Get the Y position.
  * @returns Y position.
+ * @example
+ * console.log(sprite.motion.getY());
  * @memberof motion
  */
 function getY() {
@@ -382,6 +386,8 @@ function getY() {
  * @name getDir()
  * @description Get the direction.
  * @returns Direction.
+ * @example
+ * console.log(sprite.motion.getDir());
  * @memberof motion
  */
 function getDir() {
@@ -391,7 +397,7 @@ function getDir() {
 /**
  * @name setCostume()
  * @description Set the sprite costume by id.
- * @param {number} costume 
+ * @param {number} costume costume id
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * console.log(sprite.costumes);
@@ -561,11 +567,23 @@ async function hide() {
 async function show() {
   this.shown = true;
 }
-
+/**
+ * @description Get the current costume number.
+ * @example
+ * console.log(sprite.looks.costumeNumber());
+ * @returns current costume number.
+ * @memberof looks
+ */
 async function costumeNumber() {
   return this.currentIndex;
 }
-
+/**
+ * @description Get the current sprite scale.
+ * @examplenumber
+ * console.log(sprite.looks.size());
+ * @returns current sprite size.
+ * @memberof looks
+ */
 async function size() {
   return this.size;
 }
