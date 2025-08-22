@@ -1,4 +1,3 @@
-
 class Sprite {
   renderLoop = null;
   x = 0;
@@ -116,6 +115,14 @@ class Sprite {
   }
 }
 
+/**
+ * @description Move in the current direction by n steps.
+ * @param {number} steps 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example
+ * await sprite1.motion.moveSteps(10);
+ * @namespace motion
+ */
 async function moveSteps(steps) {
   const dir = this.dir;
   const dx = steps * Math.round(Math.sin((Math.PI * dir) / 180) * 1e10) / 1e10;
@@ -125,12 +132,28 @@ async function moveSteps(steps) {
   return this.waitForRenderLoop();
 }
 
+/**
+ * @description Go to the given X and Y position.
+ * @param {number} xPos 
+ * @param {number} yPos 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example
+ * await sprite.motion.goToXY(101,212);
+ * @namespace motion
+ */
 async function gotoXY(xPos, yPos) {
   this.x = xPos;
   this.y = yPos;
   return this.waitForRenderLoop();
 }
-
+/**
+ * @description Go to object. "random" or a sprite.
+ * @param {string | Sprite} target 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example
+ * await sprite.motion.goTo("random");  
+ * @namespace motion
+ */
 async function goTo(target) {
   if (target == "random") {
     this.x = Math.floor(Math.random() * 481) - 240;
@@ -141,22 +164,50 @@ async function goTo(target) {
   }
   return this.waitForRenderLoop();
 }
-
+/**
+ * @description Turn right by n degrees.
+ * @param {number} deg 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example
+ * await sprite.motion.turnRight(10);
+ * @namespace motion
+ */
 async function turnRight(deg) {
   this.dir += deg;
   return this.waitForRenderLoop();
 }
-
+/**
+ * @description Turn left by n degrees.
+ * @param {number} deg 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example
+ * await sprite.motion.turnLeft(10);
+ * @namespace motion
+ */
 async function turnLeft(deg) {
   this.dir -= deg;
   return this.waitForRenderLoop();
 }
-
+/**
+ * @description Point to a direction.
+ * @param {number} dir 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example
+ * await sprite.motion.pointInDirection(100);
+ * @namespace motion
+ */
 async function pointInDirection(dir) {
   this.dir = dir;
   return this.waitForRenderLoop();
 }
-
+/**
+ * @description Point towards an object. "random" or Sprite.
+ * @param {string | Sprite} target 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example
+ * await sprite.motion.pointTowards("random");
+ * @namespace motion
+ */
 async function pointTowards(target) {
   let targetX = 0;
   let targetY = 0;
@@ -173,7 +224,16 @@ async function pointTowards(target) {
   return this.waitForRenderLoop();
 }
 
-
+/**
+ * @description Move to a position over n seconds.
+ * @param {number} x 
+ * @param {number} y 
+ * @param {number} secs 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example 
+ * await sprite.motion.glide(200,100,3);
+ * @namespace motion
+ */
 async function glide(x, y, secs) {
   if (!this.renderLoop) {
     throw new Error('Sprite must be added to a RenderLoop before gliding');
@@ -198,7 +258,15 @@ async function glide(x, y, secs) {
     this.glideStep();
   });
 }
-
+/**
+ * @description Move to a target over n seconds. Accepts "random" or sprite.
+ * @param {string | Sprite} target 
+ * @param {number} secs 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example
+ * await sprite.motion.glideTo("random",2);
+ * @namespace motion
+ */
 async function glideTo(target, secs) {
   if (target == "random") {
     x = Math.floor(Math.random() * 481) - 240;
@@ -208,48 +276,102 @@ async function glideTo(target, secs) {
     return glide(target.x, target.y, secs);
   }
 }
-
+/**
+ * @description Set the rotation style. "all-around", "left-right" or "dont-rotate"
+ * @param {string} style 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example
+ * await sprite.motion.setRotationStyle("left-right");
+ * await sprite.motion.turnLeft(90);
+ * @namespace motion
+ */
 async function setRotationStyle(style) {
   this.rotationStyle = style;
   return this.waitForRenderLoop();
 }
-
+/**
+ * @description Change x position by n.
+ * @param {number} x 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example 
+ * await sprite.motion.changeX(5);
+ * @namespace motion
+ */
 async function changeX(x) {
   this.x += x;
   return this.waitForRenderLoop();
 }
-
+/**
+ * @description Set x position to n.
+ * @param {number} x 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example 
+ * await sprite.motion.setX(100);
+ * @namespace motion
+ */
 async function setX(x) {
   this.x = x;
   return this.waitForRenderLoop();
 }
-
+/**
+ * @description Change y position by n.
+ * @param {number} y 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example
+ * await sprite.motion.changeY(5);
+ * @namespace motion
+ */
 async function changeY(y) {
   this.y += y;
   return this.waitForRenderLoop();
 }
-
+/**
+ * @description Set y postition to n.
+ * @param {number} y 
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example 
+ * await sprite.motion.setY(100);
+ * @namespace motion
+ */
 async function setY(y) {
   this.y = y;
   return this.waitForRenderLoop();
 }
-
+/**
+ * @description Get the X position.
+ * @returns X position.
+ * @namespace motion
+ */
 function getX() {
   return this.x;
 }
-
+/**
+ * @description Get the Y position.
+ * @returns Y position.
+ * @namespace motion
+ */
 function getY() {
   return this.y;
 }
-
+/**
+ * @description Get the direction.
+ * @returns Direction.
+ * @namespace motion
+ */
 function getDir() {
   return this.dir;
 }
 
 /**
- * 
+ * @description Set the sprite costume by id.
  * @param {number} costume 
- * @returns Promise<any>
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example
+ * console.log(sprite.costumes);
+ * // [{"name":"him","data":"him.svg","type":"vector"},{"name":"them","data":"them.png","type":"bitmap"}]
+ * await sprite.looks.setCostume(1);
+ * // {"name":"them","data":"them.png","type":"bitmap"}
+ * @namespace looks
  */
 async function setCostume(costume) {
   this.currentIndex = costume;
@@ -257,6 +379,13 @@ async function setCostume(costume) {
   await this.renderLoop.updateSkin(this);
   return this.waitForRenderLoop();
 }
+/**
+ * @description Switches to the next costume
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @example
+ * await sprite.looks.nextCostume();
+ * @namespace looks
+ */
 
 async function nextCostume() {
   this.currentIndex = (this.currentIndex + 1) % this.costumes.lengthh;
@@ -264,14 +393,40 @@ async function nextCostume() {
   await this.renderLoop.updateSkin(this);
   return this.waitForRenderLoop();
 }
+
+/**
+ * @description Set the sprite size
+ * @param {number} inSize New size
+ * @example
+ * await sprite.looks.setSize(32);
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @namespace looks
+ */
 async function setSize(inSize) {
   this.size = inSize;
   return this.waitForRenderLoop();
 }
+/**
+ * @description Chnage the sprite size
+ * @param {number} inSize Size to change by.
+ * @example
+ * await sprite.looks.chnageSize(32);
+ * @returns Promise. Await function to wait for the RenderLoop.
+ * @namespace looks
+ */
 async function changeSize(inSize) {
   this.size += inSize;
   return this.waitForRenderLoop();
 }
+
+/**
+ * @description set an effect.
+ * @param {string} effect Effect to set. "colour", "fisheye", "pixelate", "whirl", "mosaic" "brightness" or "ghost"
+ * @param {number} n New value.
+ * @example
+ * await sprite.looks.setEffect("colour",42);
+ * @namespace looks
+ */
 
 async function setEffect(effect, n) {
   switch (effect) {
@@ -301,7 +456,14 @@ async function setEffect(effect, n) {
       break;
   }
 }
-
+/**
+ * @description change an effect.
+ * @param {string} effect Effect to change. "colour", "fisheye", "pixelate", "whirl", "mosaic" "brightness" or "ghost"
+ * @param {number} n Value to change by..
+ * @example
+ * await sprite.looks.changeEffect("colour",42);
+ * @namespace looks
+ */
 async function changeEffect(effect, n) {
   switch (effect) {
     case 'colour':
@@ -330,7 +492,13 @@ async function changeEffect(effect, n) {
       break;
   }
 }
-
+/**
+ * @description Set all effects to 0, thus restoring the sprite's appearance to the default.
+ * @example
+ * await sprite.looks.changeEffect("colour",42);
+ * await sprite.looks.clearEffects();
+ * @namespace looks
+ */
 async function clearEffects() {
   this.colour = 0;
   this.fisheye = 0;
@@ -340,11 +508,21 @@ async function clearEffects() {
   this.brightness = 0;
   this.ghost = 0;
 }
-
+/**
+ * @description Hide the sprite from the renderer.
+ * @example
+ * await sprite.looks.hide();
+ * @namespace looks
+ */
 async function hide() {
   this.shown = false;
 }
-
+/**
+ * @description Show the sprite to the renderer.
+ * @example
+ * await sprite.looks.show();
+ * @namespace looks
+ */
 async function show() {
   this.shown = true;
 }
@@ -356,7 +534,14 @@ async function costumeNumber() {
 async function size() {
   return this.size;
 }
-
+/**
+ * @description Is a sprite touching another sprite
+ * @param {string | Sprite} object "mouse" or sprite.
+ * @example
+ * console.log(await sprite.sensing.touching("mouse"));
+ * @returns boolean
+ * @namespace sensing
+ */
 async function touching(object) {
   if (object === "mouse") {
     return await this.renderLoop.renderer.drawableTouching(this.render, this.renderLoop.mouse.trueX, this.renderLoop.mouse.trueY);
@@ -364,15 +549,37 @@ async function touching(object) {
     return await this.renderLoop.renderer.isTouchingDrawables(this.render, [object.render]);
   }
 }
-
+/**
+ * @description Is a sprite touching a colour
+ * @param {Array} colourRGB Colour to check
+ * @example
+ * console.log(await sprite.sensing.touchingColour([256,256,256]));
+ * @returns boolean
+ * @namespace sensing
+ */
 async function touchingColour(colourRGB) {
   return await this.renderLoop.renderer.isTouchingColor(this.render, colourRGB);
 }
-
+/**
+ * @description Check if one colour in a sprite is touching another colour anywhere.
+ * @param {Array} colourRgb1 Colour to check.
+ * @param {Array} colourRgb2 Colour to check.
+ * @example
+ * console.log(await sprite.sensing.colourTouchingColour([255, 171, 25],[256,256,256]))
+ * @returns boolean
+ * @namespace sensing
+ */
 async function colourTouchingColour(colourRgb1, colourRgb2) {
   return await (this.renderLoop.renderer.isTouchingColor(this.render, colourRgb1, colourRgb2) || this.renderLoop.renderer.isTouchingColor(this.render, colourRgb2, colourRgb1));
 }
-
+/**
+ * @description Distance from one object to another.
+ * @param {string | Sprite} object "mouse" or Sprite
+ * @example
+ * console.log(await sprite.sensing.distanceTo("mouse"));
+ * @returns number
+ * @namespace sensing
+ */
 async function distanceTo(object) {
   let tx, ty = 0;
   if (object === "mouse") {
