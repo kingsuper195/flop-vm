@@ -1,4 +1,4 @@
-class Sprite {
+export class Sprite {
   renderLoop = null;
   x = 0;
   y = 0;

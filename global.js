@@ -1,5 +1,5 @@
 
-class Flop {
+export class Flop {
   renderLoop = null;
   looks = {};
   /**
