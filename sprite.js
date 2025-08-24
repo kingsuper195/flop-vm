@@ -442,11 +442,11 @@ async function setSize(inSize) {
   return this.waitForRenderLoop();
 }
 /**
- * @name chnageSize()
- * @description Chnage the sprite size
+ * @name changeSize()
+ * @description Change the sprite size
  * @param {number} inSize Size to change by.
  * @example
- * await sprite.looks.chnageSize(32);
+ * await sprite.looks.changeSize(32);
  * @returns Promise. Await function to wait for the RenderLoop.
  * @memberof looks
  */
