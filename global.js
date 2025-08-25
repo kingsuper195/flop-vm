@@ -28,9 +28,6 @@ export class Flop {
 
 
   setRenderLoop(renderLoop) {
-    if (this.renderLoop) {
-      // this.renderLoop.removeCallback(this.glideStep.bind(this));
-    }
     this.renderLoop = renderLoop;
     if (this.renderLoop) {
       this.renderLoop.addCallback(this.renderStep.bind(this));

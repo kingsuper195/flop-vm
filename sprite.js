@@ -150,8 +150,8 @@ async function gotoXY(xPos, yPos) {
 }
 /**
 
- * @description Go to object. "random" or a sprite.
- * @param {string | Sprite} target "random" or Sprite
+ * @description Go to object. "random","mouse" or a sprite.
+ * @param {string | Sprite} target "random","mouse" or Sprite
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite.motion.goTo("random");  
@@ -161,6 +161,9 @@ async function goTo(target) {
   if (target == "random") {
     this.x = Math.floor(Math.random() * 481) - 240;
     this.y = Math.floor(Math.random() * 361) - 180;
+  } else if (target == "mouse") {
+    this.x = this.renderLoop.mouse.x;
+    this.y = this.renderLoop.mouse.y;
   } else {
     this.x = target.x;
     this.y = target.y;
@@ -209,7 +212,7 @@ async function pointInDirection(dir) {
 /**
 
  * @description Point towards an object.
- * @param {string | Sprite} target "random" or Sprite
+ * @param {string | Sprite} target "random","mouse" or Sprite
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite.motion.pointTowards("random");
@@ -219,15 +222,19 @@ async function pointTowards(target) {
   let targetX = 0;
   let targetY = 0;
   if (target == "random") {
-    this.dir = Math.round(Math.random() * 360) - 180;
-  } else {
-    targetX = target.x;
-    targetY = target.y;
-    const dx = targetX - this.x;
-    const dy = targetY - this.y;
-    const direction = 90 - Math.atan2(dy, dx) * 180 / Math.PI;
-    this.dir = direction;
+    targetX = Math.floor(Math.random() * 481) - 240;
+    targetY = Math.floor(Math.random() * 361) - 180;
+  } else if (target == "mouse") {
+    targetX = this.renderLoop.mouse.x;
+    targetY = this.renderLoop.mouse.y;
   }
+  targetX = target.x;
+  targetY = target.y;
+  const dx = targetX - this.x;
+  const dy = targetY - this.y;
+  const direction = 90 - Math.atan2(dy, dx) * 180 / Math.PI;
+  this.dir = direction;
+
   return this.waitForRenderLoop();
 }
 
@@ -281,7 +288,9 @@ async function glideTo(target, secs) {
     x = Math.floor(Math.random() * 481) - 240;
     y = Math.floor(Math.random() * 361) - 180;
     return glide(x, y, secs);
-  } else {
+  } else if(target == "mouse"){
+    return glide(this.renderLoop.mouse.x,this.renderLoop.mouse.y,secs);
+  }{
     return glide(target.x, target.y, secs);
   }
 }
