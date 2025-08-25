@@ -2,18 +2,9 @@
 export class Flop {
   renderLoop = null;
   looks = {};
-  /**
-   * @namespace sound
-   */
   sound = {};
-  /**
-   * @namespace control
-   */
   control = {};
   sensing = {};
-  /**
-   * @namespace operaters
-   */
   operaters = {};
   resolvers = [];
 
@@ -76,7 +67,7 @@ export class Flop {
  * @example
  * await flop.looks.setBackdrop("him.png",bimap);
  * @returns Promise. Await function to wait for the RenderLoop.
- * @memberof looks
+ * @category looks
  */
 async function setBackdrop(img, type) {
   await this.renderLoop.setStage(img, type);
@@ -90,7 +81,7 @@ async function setBackdrop(img, type) {
  * @param {string} soundFile url/filepath to sound file.
  * @example 
  * await flop.sound.playSound(0, 100,100,sound.mp3)
- * @memberof sound
+ * @category sound
  */
 async function playSound(pan, pitch, volume, soundFile) {
   await this.renderLoop.playSound(pan, pitch, volume, soundFile);
@@ -103,7 +94,7 @@ async function playSound(pan, pitch, volume, soundFile) {
  * flop.control.waitSeconds(0.1);
  * sprite.motion.moveSteps(10);
  * @returns Promise. Await to wait for s seconds
- * @memberof control
+ * @category control
  */
 function waitSeconds(s) {
   return new Promise(resolve => setTimeout(resolve, s * 1000));
@@ -114,7 +105,7 @@ function waitSeconds(s) {
  * @example
  * if(await flop.sensing.keyPressed("B")) 
  * @returns boolean
- * @memberof sensing
+ * @category sensing
  */
 async function keyPressed(key) {
   return (renderLoop.key == key);
@@ -127,7 +118,7 @@ async function keyPressed(key) {
  *  console.log("yay!");
  * }
  * @returns boolean
- * @memberof sensing
+ * @category sensing
  */
 async function mouseDown() {
   return this.renderLoop.mouse.click;
@@ -137,7 +128,7 @@ async function mouseDown() {
  * @example
  * console.log(await flop.sensing.mouseX());
  * @returns number, x postition of mouse pointer
- * @memberof sensing
+ * @category sensing
  */
 async function mouseX() {
   return this.renderLoop.mouse.x;
@@ -147,7 +138,7 @@ async function mouseX() {
  * @example
  * console.log(await flop.sensing.mouseY());
  * @returns number, y postition of mouse pointer
- * @memberof sensing
+ * @category sensing
  */
 async function mouseY() {
   return this.renderLoop.mouse.y;
@@ -159,7 +150,7 @@ async function mouseY() {
  * @param {number} min 
  * @param {number} max 
  * @returns number
- * @memberof operaters
+ * @category operaters
  */
 async function pickRandom(min, max) {
   return Math.floor(Math.random() * max - min) + min + 1;
