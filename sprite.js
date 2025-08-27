@@ -52,6 +52,8 @@ export class Sprite {
     this.looks.setEffect = setEffect.bind(this);
     this.looks.changeEffect = changeEffect.bind(this);
     this.looks.clearEffects = clearEffects.bind(this);
+    this.looks.goToLayer =goToLayer.bind(this);
+    this.looks.goToRelativeLayer= goToRelativeLayer.bind(this);
     this.looks.show = show.bind(this);
     this.looks.hide = hide.bind(this);
     this.looks.size = size.bind(this);
@@ -547,6 +549,24 @@ async function clearEffects() {
   this.brightness = 0;
   this.ghost = 0;
 }
+/**
+ * 
+ * @param {'back'|'front'|number} layer 
+ */
+async function goToLayer(layer) {
+  if(layer == 'back') {
+    this.renderLoop.renderer.setDrawableOrder(this.render, 0, 'sprites');
+  } else if(layer == 'front') {
+    this.renderLoop.renderer.setDrawableOrder(this.render, Infinity, 'sprites');
+  } else {
+    this.renderLoop.renderer.setDrawableOrder(this.render, layer, 'sprites');
+  }
+}
+
+async function goToRelativeLayer(layer) {
+  this.renderLoop.renderer.setDrawableOrder(this.render, layer, 'sprites', true);
+}
+
 /**
 
  * @description Hide the sprite from the renderer.
