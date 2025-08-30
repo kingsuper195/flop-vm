@@ -153,7 +153,7 @@ async function gotoXY(xPos, yPos) {
 /**
 
  * @description Go to object. "random","mouse" or a sprite.
- * @param {string | Sprite} target "random","mouse" or Sprite
+ * @param {"random" | "mouse" | Sprite} target "random","mouse" or Sprite
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite.motion.goTo("random");  
@@ -214,7 +214,7 @@ async function pointInDirection(dir) {
 /**
 
  * @description Point towards an object.
- * @param {string | Sprite} target "random","mouse" or Sprite
+ * @param {"random" | "mouse" | Sprite} target "random","mouse" or Sprite
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite.motion.pointTowards("random");
@@ -278,7 +278,7 @@ async function glide(x, y, secs) {
 /**
 
  * @description Move to a target over n seconds. Accepts "random" or sprite.
- * @param {string | Sprite} target "random" or Sprite
+ * @param {"random" | "mouse" | Sprite} target "random" or Sprite
  * @param {number} secs 
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
@@ -299,7 +299,7 @@ async function glideTo(target, secs) {
 /**
 
  * @description Set the rotation style. 
- * @param {string} style "all-around", "left-right" or "dont-rotate"
+ * @param {"all-around" | "left-right" | "dont-rotate"} style "all-around", "left-right" or "dont-rotate"
  * @returns Promise. Await function to wait for the RenderLoop.
  * @example
  * await sprite.motion.setRotationStyle("left-right");
@@ -460,7 +460,7 @@ async function changeSize(inSize) {
 /**
 
  * @description set an effect.
- * @param {string} effect Effect to set. "colour", "fisheye", "pixelate", "whirl", "mosaic" "brightness" or "ghost"
+ * @param {"colour"|"fisheye"|"pixelate"|"whirl"|"mosaic"|"brightness"|"ghost"} effect Effect to set.
  * @param {number} n New value.
  * @example
  * await sprite.looks.setEffect("colour",42);
@@ -498,7 +498,7 @@ async function setEffect(effect, n) {
 /**
 
  * @description change an effect.
- * @param {string} effect Effect to change. "colour", "fisheye", "pixelate", "whirl", "mosaic" "brightness" or "ghost"
+ * @param {"colour"|"fisheye"|"pixelate"|"whirl"|"mosaic"|"brightness"|"ghost"} effect Effect to change. 
  * @param {number} n Value to change by..
  * @example
  * await sprite.looks.changeEffect("colour",42);
@@ -610,7 +610,7 @@ async function size() {
 /**
 
  * @description Is a sprite touching another sprite
- * @param {string | Sprite} object "mouse" or sprite.
+ * @param {"mouse" | Sprite} object object to check.
  * @example
  * console.log(await sprite.sensing.touching("mouse"));
  * @returns boolean
@@ -618,9 +618,9 @@ async function size() {
  */
 async function touching(object) {
   if (object === "mouse") {
-    return await this.renderLoop.renderer.drawableTouching(this.render, this.renderLoop.mouse.trueX, this.renderLoop.mouse.trueY);
+    return await this.renderLoop.spriteTouchingPoint(this, this.renderLoop.mouse.trueX, this.renderLoop.mouse.trueY);
   } else {
-    return await this.renderLoop.renderer.isTouchingDrawables(this.render, [object.render]);
+    return await this.renderLoop.spriteTouchingSprites([this,object]);
   }
 }
 /** 
@@ -633,25 +633,25 @@ async function touching(object) {
  * @category sensing
  */
 async function touchingColour(colourRGB) {
-  return await this.renderLoop.renderer.isTouchingColor(this.render, colourRGB);
+  return await this.renderLoop.spriteTouchingColour(this, colourRGB);
 }
 /**
 
  * @description Check if one colour in a sprite is touching another colour anywhere.
- * @param {Array} colourRgb1 Colour to check.
- * @param {Array} colourRgb2 Colour to check.
+ * @param {Array} spriteColour Colour in sprite to check.
+ * @param {Array} outerColour Colour outside sprite to check.
  * @example
  * console.log(await sprite.sensing.colourTouchingColour([255, 171, 25],[256,256,256]))
  * @returns boolean
  * @category sensing
  */
-async function colourTouchingColour(colourRgb1, colourRgb2) {
-  return await (this.renderLoop.renderer.isTouchingColor(this.render, colourRgb1, colourRgb2) || this.renderLoop.renderer.isTouchingColor(this.render, colourRgb2, colourRgb1));
+async function colourTouchingColour(spriteColour, outerColour) {
+  return await this.renderLoop.spriteColourTouchingColour(this,spriteColour,outerColour);
 }
 /**
 
  * @description Distance from one object to another.
- * @param {string | Sprite} object "mouse" or Sprite
+ * @param {"mouse" | Sprite} object Object to check.
  * @example
  * console.log(await sprite.sensing.distanceTo("mouse"));
  * @returns number
