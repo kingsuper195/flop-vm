@@ -1,6 +1,7 @@
 
 export class Flop {
   renderLoop = null;
+  _timer = 0;
   looks = {};
   sound = {};
   control = {};
@@ -12,10 +13,13 @@ export class Flop {
     this.looks.setBackdrop = setBackdrop.bind(this);
     this.sound.playSound = playSound.bind(this);
     this.control.waitSeconds = waitSeconds.bind(this);
+    this.control.waitUntil = waitUntil.bind(this);
     this.sensing.keyPressed = keyPressed.bind(this);
     this.sensing.mouseDown = mouseDown.bind(this);
     this.sensing.mouseX = mouseX.bind(this);
     this.sensing.mouseY = mouseY.bind(this);
+    this.sensing.timer = timer.bind(this);
+    this.sensing.resetTimer =resetTimer.bind(this);
     this.operaters.pickRandom = pickRandom.bind(this);
   }
 
@@ -96,6 +100,25 @@ async function playSound(pan, pitch, volume, soundFile) {
 function waitSeconds(s) {
   return new Promise(resolve => setTimeout(resolve, s * 1000));
 }
+
+/**
+ * @description Waits until condition = true
+ * @param {() => Boolean} con 
+ * @example
+ * flop.control.waitUntil(() => flop.sensing.timer() > 3);
+ * @returns Promise. Await to wait until condition = true.
+ * @category control
+ */
+function waitUntil(con) {
+  return new Promise((resolve)=>{
+    let intervalWaitUntil = setInterval(async ()=>{
+      if(await con()){
+        clearInterval(intervalWaitUntil);
+        resolve();
+      }
+    },100);
+  })
+}
 /**
  * @description is this key pressed
  * @param {string} key https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values + a-z
@@ -140,6 +163,30 @@ async function mouseX() {
 async function mouseY() {
   return this.renderLoop.mouse.y;
 }
+/**
+ * @description get the time since resetTimer was last run
+ * @example
+ * await flop.sensing.resetTimer();
+ * await flop.control.waitSeconds(1);
+ * console.log(await flop.sensing.timer()); //1
+ * @returns number
+ * @category sensing
+ */
+function timer() {
+  return (Date.now() - this._timer)/1000;
+}
+
+/**
+ * @description Reset the timer.
+ * @example
+ * await flop.sensing.resetTimer();
+ * @returns number
+ * @category sensing
+ */
+function resetTimer() {
+  this._timer=Date.now();
+}
+
 /**
  * @description Get a random number from min to max.
  * @example

@@ -53,7 +53,7 @@ export class Sprite {
     this.looks.changeEffect = changeEffect.bind(this);
     this.looks.clearEffects = clearEffects.bind(this);
     this.looks.goToLayer =goToLayer.bind(this);
-    this.looks.goToRelativeLayer= goToRelativeLayer.bind(this);
+    this.looks.changeLayers= changeLayers.bind(this);
     this.looks.show = show.bind(this);
     this.looks.hide = hide.bind(this);
     this.looks.size = size.bind(this);
@@ -550,21 +550,30 @@ async function clearEffects() {
   this.ghost = 0;
 }
 /**
- * 
+ * @description go to specific layer 0-INFINITY
+ * @example
+ * await sprite.looks.goToLayer(100);
  * @param {'back'|'front'|number} layer 
+ * @category looks
  */
 async function goToLayer(layer) {
   if(layer == 'back') {
-    this.renderLoop.renderer.setDrawableOrder(this.render, 0, 'sprites');
+    await this.renderLoop.setDrawableOrder(this, 0);
   } else if(layer == 'front') {
-    this.renderLoop.renderer.setDrawableOrder(this.render, Infinity, 'sprites');
+    await this.renderLoop.setDrawableOrder(this, Infinity);
   } else {
-    this.renderLoop.renderer.setDrawableOrder(this.render, layer, 'sprites');
+    await this.renderLoop.setDrawableOrder(this, layer);
   }
 }
-
-async function goToRelativeLayer(layer) {
-  this.renderLoop.renderer.setDrawableOrder(this.render, layer, 'sprites', true);
+/**
+ * @description change layer by X
+ * @example
+ * await this.renderLoop.changeLayers(1);
+ * @param {number} layer 
+ * 
+ */
+async function changeLayers(layer) {
+  await this.renderLoop.renderer.setDrawableOrder(this.render, layer, true);
 }
 
 /**
