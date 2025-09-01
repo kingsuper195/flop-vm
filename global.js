@@ -103,7 +103,7 @@ function waitSeconds(s) {
 
 /**
  * @description Waits until condition = true
- * @param {() => Boolean} con 
+ * @param {Function} con 
  * @example
  * flop.control.waitUntil(() => flop.sensing.timer() > 3);
  * @returns Promise. Await to wait until condition = true.
