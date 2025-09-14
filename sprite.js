@@ -52,8 +52,8 @@ export class Sprite {
     this.looks.setEffect = setEffect.bind(this);
     this.looks.changeEffect = changeEffect.bind(this);
     this.looks.clearEffects = clearEffects.bind(this);
-    this.looks.goToLayer =goToLayer.bind(this);
-    this.looks.changeLayers= changeLayers.bind(this);
+    this.looks.goToLayer = goToLayer.bind(this);
+    this.looks.changeLayers = changeLayers.bind(this);
     this.looks.show = show.bind(this);
     this.looks.hide = hide.bind(this);
     this.looks.size = size.bind(this);
@@ -132,6 +132,7 @@ async function moveSteps(steps) {
   const dy = steps * Math.round(Math.cos((Math.PI * dir) / 180) * 1e10) / 1e10;
   this.x += dx;
   this.y += dy;
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 
@@ -148,6 +149,7 @@ async function moveSteps(steps) {
 async function gotoXY(xPos, yPos) {
   this.x = xPos;
   this.y = yPos;
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 /**
@@ -170,6 +172,7 @@ async function goTo(target) {
     this.x = target.x;
     this.y = target.y;
   }
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 /**
@@ -183,6 +186,7 @@ async function goTo(target) {
  */
 async function turnRight(deg) {
   this.dir += deg;
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 /**
@@ -196,6 +200,7 @@ async function turnRight(deg) {
  */
 async function turnLeft(deg) {
   this.dir -= deg;
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 /**
@@ -209,6 +214,7 @@ async function turnLeft(deg) {
  */
 async function pointInDirection(dir) {
   this.dir = dir;
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 /**
@@ -236,7 +242,7 @@ async function pointTowards(target) {
   const dy = targetY - this.y;
   const direction = 90 - Math.atan2(dy, dx) * 180 / Math.PI;
   this.dir = direction;
-
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 
@@ -290,9 +296,9 @@ async function glideTo(target, secs) {
     x = Math.floor(Math.random() * 481) - 240;
     y = Math.floor(Math.random() * 361) - 180;
     return glide(x, y, secs);
-  } else if(target == "mouse"){
-    return glide(this.renderLoop.mouse.x,this.renderLoop.mouse.y,secs);
-  }{
+  } else if (target == "mouse") {
+    return glide(this.renderLoop.mouse.x, this.renderLoop.mouse.y, secs);
+  } {
     return glide(target.x, target.y, secs);
   }
 }
@@ -308,6 +314,7 @@ async function glideTo(target, secs) {
  */
 async function setRotationStyle(style) {
   this.rotationStyle = style;
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 /**
@@ -321,6 +328,7 @@ async function setRotationStyle(style) {
  */
 async function changeX(x) {
   this.x += x;
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 /**
@@ -334,6 +342,7 @@ async function changeX(x) {
  */
 async function setX(x) {
   this.x = x;
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 /**
@@ -347,6 +356,7 @@ async function setX(x) {
  */
 async function changeY(y) {
   this.y += y;
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 /**
@@ -360,6 +370,7 @@ async function changeY(y) {
  */
 async function setY(y) {
   this.y = y;
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 /**
@@ -441,6 +452,7 @@ async function nextCostume() {
  */
 async function setSize(inSize) {
   this.size = inSize;
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 /**
@@ -454,6 +466,7 @@ async function setSize(inSize) {
  */
 async function changeSize(inSize) {
   this.size += inSize;
+  await this.renderLoop.drawSprite();
   return this.waitForRenderLoop();
 }
 
@@ -494,6 +507,8 @@ async function setEffect(effect, n) {
       console.error('invalid effect');
       break;
   }
+  await this.renderLoop.drawSprite();
+  return this.waitForRenderLoop();
 }
 /**
 
@@ -531,6 +546,8 @@ async function changeEffect(effect, n) {
       console.error('invalid effect');
       break;
   }
+  await this.renderLoop.drawSprite();
+  return this.waitForRenderLoop();
 }
 /**
 
@@ -548,6 +565,8 @@ async function clearEffects() {
   this.mosaic = 0;
   this.brightness = 0;
   this.ghost = 0;
+  await this.renderLoop.drawSprite();
+  return this.waitForRenderLoop();
 }
 /**
  * @description go to specific layer 0-INFINITY
@@ -557,9 +576,9 @@ async function clearEffects() {
  * @category looks
  */
 async function goToLayer(layer) {
-  if(layer == 'back') {
+  if (layer == 'back') {
     await this.renderLoop.setDrawableOrder(this, 0);
-  } else if(layer == 'front') {
+  } else if (layer == 'front') {
     await this.renderLoop.setDrawableOrder(this, Infinity);
   } else {
     await this.renderLoop.setDrawableOrder(this, layer);
@@ -585,6 +604,8 @@ async function changeLayers(layer) {
  */
 async function hide() {
   this.shown = false;
+  await this.renderLoop.drawSprite();
+  return this.waitForRenderLoop();
 }
 /**
 
@@ -595,6 +616,8 @@ async function hide() {
  */
 async function show() {
   this.shown = true;
+  await this.renderLoop.drawSprite();
+  return this.waitForRenderLoop();
 }
 /**
  * @description Get the current costume number.
@@ -629,7 +652,7 @@ async function touching(object) {
   if (object === "mouse") {
     return await this.renderLoop.spriteTouchingPoint(this, this.renderLoop.mouse.trueX, this.renderLoop.mouse.trueY);
   } else {
-    return await this.renderLoop.spriteTouchingSprites([this,object]);
+    return await this.renderLoop.spriteTouchingSprites([this, object]);
   }
 }
 /** 
@@ -655,7 +678,7 @@ async function touchingColour(colourRGB) {
  * @category sensing
  */
 async function colourTouchingColour(spriteColour, outerColour) {
-  return await this.renderLoop.spriteColourTouchingColour(this,spriteColour,outerColour);
+  return await this.renderLoop.spriteColourTouchingColour(this, spriteColour, outerColour);
 }
 /**
 
