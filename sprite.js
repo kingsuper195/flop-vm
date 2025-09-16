@@ -3,7 +3,6 @@ export class Sprite {
   x = 0;
   y = 0;
   dir = 90;
-  rotationStyle = 'all-around'; // 'left-right' || 'dont-rotate'
   size = 100;
   shown = true;
   colour = 0;
@@ -37,7 +36,6 @@ export class Sprite {
     this.motion.pointTowards = pointTowards.bind(this);
     this.motion.glide = glide.bind(this);
     this.motion.glideTo = glideTo.bind(this);
-    this.motion.setRotationStyle = setRotationStyle.bind(this);
     this.motion.changeX = changeX.bind(this);
     this.motion.setX = setX.bind(this);
     this.motion.changeY = changeY.bind(this);
@@ -132,7 +130,7 @@ async function moveSteps(steps) {
   const dy = steps * Math.round(Math.cos((Math.PI * dir) / 180) * 1e10) / 1e10;
   this.x += dx;
   this.y += dy;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, "position");
   return this.waitForRenderLoop();
 }
 
@@ -149,7 +147,7 @@ async function moveSteps(steps) {
 async function gotoXY(xPos, yPos) {
   this.x = xPos;
   this.y = yPos;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, "position");
   return this.waitForRenderLoop();
 }
 /**
@@ -172,7 +170,7 @@ async function goTo(target) {
     this.x = target.x;
     this.y = target.y;
   }
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, "position");
   return this.waitForRenderLoop();
 }
 /**
@@ -186,7 +184,7 @@ async function goTo(target) {
  */
 async function turnRight(deg) {
   this.dir += deg;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, direction);
   return this.waitForRenderLoop();
 }
 /**
@@ -200,7 +198,7 @@ async function turnRight(deg) {
  */
 async function turnLeft(deg) {
   this.dir -= deg;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, direction);
   return this.waitForRenderLoop();
 }
 /**
@@ -214,7 +212,7 @@ async function turnLeft(deg) {
  */
 async function pointInDirection(dir) {
   this.dir = dir;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, direction);
   return this.waitForRenderLoop();
 }
 /**
@@ -242,7 +240,7 @@ async function pointTowards(target) {
   const dy = targetY - this.y;
   const direction = 90 - Math.atan2(dy, dx) * 180 / Math.PI;
   this.dir = direction;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, direction);
   return this.waitForRenderLoop();
 }
 
@@ -304,21 +302,6 @@ async function glideTo(target, secs) {
 }
 /**
 
- * @description Set the rotation style. 
- * @param {"all-around" | "left-right" | "dont-rotate"} style "all-around", "left-right" or "dont-rotate"
- * @returns Promise. Await function to wait for the RenderLoop.
- * @example
- * await sprite.motion.setRotationStyle("left-right");
- * await sprite.motion.turnLeft(90);
- * @category motion
- */
-async function setRotationStyle(style) {
-  this.rotationStyle = style;
-  await this.renderLoop.drawSprite();
-  return this.waitForRenderLoop();
-}
-/**
-
  * @description Change x position by n.
  * @param {number} x value to change by
  * @returns Promise. Await function to wait for the RenderLoop.
@@ -328,7 +311,7 @@ async function setRotationStyle(style) {
  */
 async function changeX(x) {
   this.x += x;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, "position");
   return this.waitForRenderLoop();
 }
 /**
@@ -342,7 +325,7 @@ async function changeX(x) {
  */
 async function setX(x) {
   this.x = x;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, "position");
   return this.waitForRenderLoop();
 }
 /**
@@ -356,7 +339,7 @@ async function setX(x) {
  */
 async function changeY(y) {
   this.y += y;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, "position");
   return this.waitForRenderLoop();
 }
 /**
@@ -370,7 +353,7 @@ async function changeY(y) {
  */
 async function setY(y) {
   this.y = y;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, "postion");
   return this.waitForRenderLoop();
 }
 /**
@@ -452,7 +435,7 @@ async function nextCostume() {
  */
 async function setSize(inSize) {
   this.size = inSize;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this,"scale");
   return this.waitForRenderLoop();
 }
 /**
@@ -466,7 +449,7 @@ async function setSize(inSize) {
  */
 async function changeSize(inSize) {
   this.size += inSize;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this,"scale");
   return this.waitForRenderLoop();
 }
 
@@ -507,7 +490,7 @@ async function setEffect(effect, n) {
       console.error('invalid effect');
       break;
   }
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, "effects");
   return this.waitForRenderLoop();
 }
 /**
@@ -546,7 +529,7 @@ async function changeEffect(effect, n) {
       console.error('invalid effect');
       break;
   }
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, "effects");
   return this.waitForRenderLoop();
 }
 /**
@@ -565,7 +548,7 @@ async function clearEffects() {
   this.mosaic = 0;
   this.brightness = 0;
   this.ghost = 0;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, "effects");
   return this.waitForRenderLoop();
 }
 /**
@@ -604,7 +587,7 @@ async function changeLayers(layer) {
  */
 async function hide() {
   this.shown = false;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, "visible");
   return this.waitForRenderLoop();
 }
 /**
@@ -616,7 +599,7 @@ async function hide() {
  */
 async function show() {
   this.shown = true;
-  await this.renderLoop.drawSprite();
+  await this.renderLoop.drawSprite(this, "visible");
   return this.waitForRenderLoop();
 }
 /**
