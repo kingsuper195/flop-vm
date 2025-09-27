@@ -1,5 +1,6 @@
 export class Sprite {
   renderLoop = null;
+  _screenRefresh = true;
   x = 0;
   y = 0;
   dir = 90;
@@ -109,9 +110,26 @@ export class Sprite {
   }
 
   async waitForRenderLoop() {
-    return new Promise(resolve => {
-      this.resolvers.push(resolve);
-    });
+    if (this._screenRefresh) {
+      this.renderLoop.screenRefresh = true;
+      return new Promise(resolve => {
+        this.resolvers.push(resolve);
+      });
+    } else {
+      this.renderLoop.screenRefresh = false;
+      return true;
+    }
+  }
+
+  async setScreenRefresh(value) {
+    this._screenRefresh = value;
+    if(value) {
+      await this.waitForRenderLoop();
+    }
+  }
+
+  getScreenRefresh() {
+    return this._screenRefresh;
   }
 }
 
@@ -435,7 +453,7 @@ async function nextCostume() {
  */
 async function setSize(inSize) {
   this.size = inSize;
-  await this.renderLoop.drawSprite(this,"scale");
+  await this.renderLoop.drawSprite(this, "scale");
   return this.waitForRenderLoop();
 }
 /**
@@ -449,7 +467,7 @@ async function setSize(inSize) {
  */
 async function changeSize(inSize) {
   this.size += inSize;
-  await this.renderLoop.drawSprite(this,"scale");
+  await this.renderLoop.drawSprite(this, "scale");
   return this.waitForRenderLoop();
 }
 
